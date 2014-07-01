@@ -72,6 +72,32 @@ class GLES20RenderEngine : public RenderEngine {
         }
     };
 
+    /*
+     * Key is used to retrieve a Group in the cache.
+     * A Key is generated from width and height
+     */
+    class Key {
+        friend class GLES20RenderEngine;
+        int mWidth;
+        int mHeight;
+    public:
+        inline Key() : mWidth(0), mHeight(0) { }
+        inline Key(int width, int height) :
+                              mWidth(width), mHeight(height) { }
+        inline Key(const Key& rhs) : mWidth(rhs.mWidth),
+                                        mHeight(rhs.mHeight) { }
+
+        friend inline int strictly_order_type(const Key& lhs, const Key& rhs) {
+            if (lhs.mWidth != rhs.mWidth)
+                return ((lhs.mWidth < rhs.mWidth) ? 1 : 0);
+
+            if (lhs.mHeight != rhs.mHeight)
+                return ((lhs.mHeight < rhs.mHeight) ? 1 : 0);
+
+            return 0;
+        }
+    };
+
     struct Group {
         GLuint texture;
         GLuint fbo;
